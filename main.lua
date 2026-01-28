@@ -1,4 +1,4 @@
--- 23:12
+--23:22
 
 function LPH_NO_VIRTUALIZE(fuction) -- unnecessary now
     return fuction
@@ -5958,77 +5958,43 @@ local Tabs = {
 }
 
 --// GroupBoxes
-local MainLeft = Tabs.Main:AddLeftGroupbox("Main")
-local MainRight = Tabs.Main:AddRightGroupbox("Extra")
+local MainLeft = Tabs.Main:AddLeftGroupbox("Main Features")
+local MainRight = Tabs.Main:AddRightGroupbox("Settings")
 
-local VisualLeft = Tabs.Visuals:AddLeftGroupbox("Visuals")
-local MiscLeft = Tabs.Misc:AddLeftGroupbox("Misc")
+local VisualLeft = Tabs.Visuals:AddLeftGroupbox("Visual Options")
+local MiscLeft = Tabs.Misc:AddLeftGroupbox("Miscellaneous")
 
---// Buttons
-MainLeft:AddButton("Action Button", function() end)
-
---// Toggles
-MainLeft:AddToggle("ExampleToggle", {
-    Text = "Enable Feature",
+--// Add some example elements
+MainLeft:AddToggle("Feature1", {
+    Text = "Feature Enabled",
     Default = false
 })
 
---// Slider
-MainLeft:AddSlider("ExampleSlider", {
-    Text = "Value",
+MainLeft:AddSlider("Slider1", {
+    Text = "Adjustment",
     Default = 50,
     Min = 0,
     Max = 100,
-    Rounding = 0
+    Rounding = 1
 })
 
---// Dropdown
-MainLeft:AddDropdown("ExampleDropdown", {
-    Text = "Mode",
-    Values = {"A", "B", "C"},
+MainLeft:AddDropdown("Dropdown1", {
+    Text = "Option Select",
+    Values = {"Option A", "Option B", "Option C"},
     Default = 1
 })
 
---// ColorPicker
-VisualLeft:AddLabel("Accent Color"):AddColorPicker("AccentColor", {
+MainLeft:AddButton("Action", function()
+    print("Button pressed!")
+end)
+
+VisualLeft:AddColorPicker("Color1", {
     Default = Color3.fromRGB(0, 85, 255),
-    Title = "Accent Color",
-    Transparency = 0
+    Title = "Primary Color"
 })
 
---// Keybind
-MainLeft:AddLabel("Keybind"):AddKeyPicker("ExampleKey", {
-    Default = "F",
-    Mode = "Toggle",
-    Text = "Toggle Feature"
-})
-
---// Textbox
-MiscLeft:AddInput("ExampleInput", {
-    Default = "",
-    Numeric = false,
-    Finished = true,
-    Text = "Text Input"
-})
-
---// Labels
 MiscLeft:AddLabel("This is a label")
-MiscLeft:AddBlank(10)
-MiscLeft:AddLabel("Another label")
-
---// Dependency Example
-local DepToggle = MainRight:AddToggle("DepToggle", {
-    Text = "Enable Advanced",
-    Default = false
-})
-
-MainRight:AddSlider("DepSlider", {
-    Text = "Advanced Value",
-    Default = 25,
-    Min = 0,
-    Max = 50,
-    Rounding = 0
-})
+MiscLeft:AddLabel("Add more options here")
 
 --// Theme & Save
 local ThemeManager = loadstring(game:HttpGet(
