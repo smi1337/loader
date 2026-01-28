@@ -1,3 +1,31 @@
+--[[
+
+    ~ New Discord Server ~
+
+    [ https://discord.gg/tUEJZYvF9d ]
+
+    ~ Index ~
+
+    [ Drawing Library ] - [ Line 111 ]
+    [ UI Library ] - [ Line 1117 ]
+    [ Cham Library ] - [ Line 2710 ]
+    [ Main Cheat ] - [ Line 2766 ]
+    [ Make UI ] - [ Line 5778 ]
+
+    ~ Credits ~
+
+    [ iRay ] - [ @896378803868295178 ] | Lead developer
+    [ ipufo ] - [ @819756897543389184 ] | Took over development since 5/19/2025
+    [ Mickey ] - [ @953720095811719208 ] | Developed perfect trajectory function and ESP library
+    [ Redpoint ] - [ @418013390024474624 ] | Contributed to triangles in the custom drawing api
+
+    ~ Special Thanks ~
+
+    [ BBot ] - [ Inspiration to make such a nice UI and high quality/quantity feature list ]
+    [ Legacy ] - [ Best and only beta tester ]
+
+]]
+
 function LPH_NO_VIRTUALIZE(fuction) -- unnecessary now
     return fuction
 end
@@ -5,7 +33,7 @@ LPH_JIT_MAX = LPH_NO_VIRTUALIZE
 
 local devMode = true
 local defaultUIName = "Wapus" -- $$$
-local folderName = "SpaceRBX"
+local folderName = "Phantom Forces Cheat"
 local connectionList = {}
 local callbackList = {}
 local playerStatus = {}
@@ -15,7 +43,7 @@ local cham = {}
 local unloadMain
 local wapus
 
--- anti votekick
+-- anti votekick bot code
 local userName = game:GetService("Players").LocalPlayer.Name
 local fileName = tostring(game.JobId) .. ".txt"
 if isfolder(folderName) and isfolder(folderName .. "/cache") and isfolder(folderName .. "/cache/votekick data") and isfile(folderName .. "/cache/votekick data/" .. fileName) and readfile(folderName .. "/cache/votekick data/" .. fileName) ~= userName then
@@ -5933,595 +5961,122 @@ LPH_JIT_MAX(function() -- Main Cheat
 end)()
 
 LPH_NO_VIRTUALIZE(function() -- Make UI
-    local httpService = game:GetService("HttpService")
+--// Load Linoria
+local Library = loadstring(game:HttpGet(
+    "https://raw.githubusercontent.com/Space-RB/Hub-V3/refs/heads/main/LuaCore/Library/Linoria/Main.lua"
+))()
+
+--// Window
+local Window = Library:CreateWindow({
+    Title = "SpaceRBX",
+    Center = true,
+    AutoShow = true,
+    TabPadding = 8,
+    MenuFadeTime = 0.2
+})
+
+--// Tabs
+local Tabs = {
+    Main = Window:AddTab("Main"),
+    Visuals = Window:AddTab("Visuals"),
+    Misc = Window:AddTab("Misc"),
+    Settings = Window:AddTab("Settings")
+}
+
+--// GroupBoxes
+local MainLeft = Tabs.Main:AddLeftGroupbox("Main")
+local MainRight = Tabs.Main:AddRightGroupbox("Extra")
+
+local VisualLeft = Tabs.Visuals:AddLeftGroupbox("Visuals")
+local MiscLeft = Tabs.Misc:AddLeftGroupbox("Misc")
+
+--// Buttons
+MainLeft:AddButton("Action Button", function() end)
+
+--// Toggles
+MainLeft:AddToggle("ExampleToggle", {
+    Text = "Enable Feature",
+    Default = false
+})
+
+--// Slider
+MainLeft:AddSlider("ExampleSlider", {
+    Text = "Value",
+    Default = 50,
+    Min = 0,
+    Max = 100,
+    Rounding = 0
+})
+
+--// Dropdown
+MainLeft:AddDropdown("ExampleDropdown", {
+    Text = "Mode",
+    Values = {"A", "B", "C"},
+    Default = 1
+})
+
+--// ColorPicker
+VisualLeft:AddLabel("Accent Color"):AddColorPicker("AccentColor", {
+    Default = Color3.fromRGB(0, 85, 255),
+    Title = "Accent Color",
+    Transparency = 0
+})
+
+--// Keybind
+MainLeft:AddLabel("Keybind"):AddKeyPicker("ExampleKey", {
+    Default = "F",
+    Mode = "Toggle",
+    Text = "Toggle Feature"
+})
+
+--// Textbox
+MiscLeft:AddInput("ExampleInput", {
+    Default = "",
+    Numeric = false,
+    Finished = true,
+    Text = "Text Input"
+})
+
+--// Labels
+MiscLeft:AddLabel("This is a label")
+MiscLeft:AddBlank(10)
+MiscLeft:AddLabel("Another label")
+
+--// Dependency Example
+local DepToggle = MainRight:AddToggle("DepToggle", {
+    Text = "Enable Advanced",
+    Default = false
+})
+
+MainRight:AddSlider("DepSlider", {
+    Text = "Advanced Value",
+    Default = 25,
+    Min = 0,
+    Max = 50,
+    Rounding = 0
+}):AddDependency({ DepToggle })
+
+--// Theme & Save
+local ThemeManager = loadstring(game:HttpGet(
+    "https://raw.githubusercontent.com/Space-RB/Hub-V3/refs/heads/main/LuaCore/Library/ThemeManager.lua"
+))()
+
+local SaveManager = loadstring(game:HttpGet(
+    "https://raw.githubusercontent.com/Space-RB/Hub-V3/refs/heads/main/LuaCore/Library/SaveManager.lua"
+))()
 
-    if not isfolder(folderName) then -- theme.json, lastconfig.json, configs
-        makefolder(folderName)
-    end
+ThemeManager:SetLibrary(Library)
+SaveManager:SetLibrary(Library)
 
-    if not isfolder(folderName .. "/configs") then
-        makefolder(folderName .. "/configs")
-    end
+SaveManager:IgnoreThemeSettings()
+SaveManager:SetIgnoreIndexes({ "MenuKeybind" })
 
-    if not isfolder(folderName .. "/cache") then
-        makefolder(folderName .. "/cache")
-    end
+ThemeManager:SetFolder("SpaceRBX")
+SaveManager:SetFolder("SpaceRBX/configs")
 
-    if not isfolder(folderName .. "/cache/votekick data") then
-        makefolder(folderName .. "/cache/votekick data")
-    end
+ThemeManager:ApplyToTab(Tabs.Settings)
+SaveManager:BuildConfigSection(Tabs.Settings)
 
-    --writefile(folderName .. "/cache/votekick data/" .. fileName, userName)
-
-    if not isfile(folderName .. "/cache/servers.json") then
-        writefile(folderName .. "/cache/servers.json", httpService:JSONEncode({}))
-    end
-
-    if not isfolder(folderName .. "/sounds") then
-        makefolder(folderName .. "/sounds")
-
-        task.delay(1, function()
-            for name, link in {
-                ["roblox hit"] = "https://www.myinstants.com/media/sounds/roblox-death-sound_ytkBL7X.mp3",
-                ["minecraft hit"] = "https://www.myinstants.com/media/sounds/steve-old-hurt-sound_XKZxUk4.mp3",
-                ["discord"] = "https://www.myinstants.com/media/sounds/discord-notification.mp3",
-                ["taco bell"] = "https://www.myinstants.com/media/sounds/taco-bell-bong-sfx.mp3",
-                ["bye bye"] = "https://www.myinstants.com/media/sounds/bye-bye-see-ya-later-audiotrimmer.mp3",
-                ["hit marker"] = "https://www.myinstants.com/media/sounds/hitmarker_2.mp3",
-                ["punch"] = "https://www.myinstants.com/media/sounds/punch-gaming-sound-effect-hd_RzlG1GE.mp3",
-                ["minecraft bow"] = "https://www.myinstants.com/media/sounds/bow_shoot.mp3",
-                ["fart"] = "https://www.myinstants.com/media/sounds/fart-moan3.mp3",
-                ["cum"] = "https://www.myinstants.com/media/sounds/splooge-sound.mp3",
-                ["moan"] = "https://www.myinstants.com/media/sounds/anime-ahh.mp3",
-                ["goofy"] = "https://www.myinstants.com/media/sounds/goofy-ahh-sounds.mp3"
-            } do -- why so mean
-                writefile(folderName .. "/sounds/" .. name .. ".mp3", game:HttpGet(link, true))
-                task.wait(1) -- some executors limit httpget
-            end
-        end)
-    end
-
-    local chatListsFiles = {}
-    local soundFileList = {"None"}
-    local stillGoing = true
-    task.spawn(function()
-        while stillGoing do
-            for i = 1, #soundFileList do
-                soundFileList[i] = nil
-            end
-
-            table.insert(soundFileList, "None")
-
-            for _, name in listfiles(folderName .. "/sounds") do
-                --name = string.gsub(string.gsub(string.gsub(name, folderName .. "/sounds", ""), folderName .. [[\\]], ""), folderName .. "/", "") -- this so gay niggeret
-                local fileNames = string.split(name, "sounds")
-                name = string.sub(fileNames[2], 2, string.len(name))
-                table.insert(soundFileList, name)
-
-                if not customAudios[name] and pcall(getcustomasset, folderName .. "/sounds/" .. name) then
-                    customAudios[name] = getcustomasset(folderName .. "/sounds/" .. name)
-                end
-            end
-
-            for i = 1, #chatListsFiles do
-                chatListsFiles[i] = nil
-            end
-
-            for _, name in listfiles(folderName .. "/chat spam lists") do
-                name = string.gsub(string.gsub(name, folderName .. "/chat spam lists/", ""), folderName .. "\\chat spam lists\\", "")
-                table.insert(chatListsFiles, name)
-
-                if not chatSpamLists[name] then
-                    chatSpamLists[name] = httpService:JSONDecode(readfile(folderName .. "/chat spam lists/" .. name))
-                end
-            end
-
-            task.wait(3)
-        end
-    end)
-
-    if not isfolder(folderName .. "/chat spam lists") then
-        makefolder(folderName .. "/chat spam lists")
-    end
-
-    if not isfile(folderName .. "/chat spam lists/default.txt") then
-        writefile(folderName .. "/chat spam lists/default.txt", httpService:JSONEncode({
-            "but doctor prognosis: OWNED", -- legacy a pro for this list
-            "but doctor results: 🔥",
-            "looks like you need to talk to your doctor",
-            "speak to your doctor about this one",
-            "but analysis: PWNED",
-            "but diagnosis: OWND"
-        }))
-    end
-
-    local configExists = isfile(folderName .. "/cache/lastfile.json")
-    if not configExists then
-        writefile(folderName .. "/cache/lastfile.json", httpService:JSONEncode({}))
-    end
-
-    local uiCache
-    local cacheExists = isfile(folderName .. "/cache/settings.json")
-    if not cacheExists then
-        writefile(folderName .. "/cache/settings.json", httpService:JSONEncode({}))
-    else
-        uiCache = httpService:JSONDecode(readfile(folderName .. "/cache/settings.json"))
-    end
-
-    local title
-    if isfile(folderName .. "/theme.json") then
-        local userThemeData = httpService:JSONDecode(readfile(folderName .. "/theme.json"))
-        title = (userThemeData.Title == "Wapus" and "Wapus.Shop") or userThemeData.Title
-        wapus.theme = {
-            accent = Color3.fromRGB(table.unpack(userThemeData["Accent Color"])),
-            text = Color3.fromRGB(table.unpack(userThemeData["Text Color"])),
-            background = Color3.fromRGB(table.unpack(userThemeData["Background Color"])),
-            lightbackground = Color3.fromRGB(table.unpack(userThemeData["Light Background Color"])),
-            hidden = Color3.fromRGB(table.unpack(userThemeData["Hidden Color"])),
-            hiddenText = Color3.fromRGB(table.unpack(userThemeData["Hidden Text Color"])),
-            outline = Color3.fromRGB(table.unpack(userThemeData["Outline Color"]))
-        }
-    else
-        local themeData = {
-            ["Title"] = defaultUIName,
-            ["Accent Color"] = {127, 72, 163},
-            ["Text Color"] = {255, 255, 255},
-            ["Background Color"] = {35, 35, 35},
-            ["Light Background Color"] = {50, 50, 50},
-            ["Hidden Color"] = {26, 26, 26},
-            ["Hidden Text Color"] = {200, 200, 200},
-            ["Outline Color"] = {0, 0, 0}
-        }
-
-        writefile(folderName .. "/theme.json", httpService:JSONEncode(themeData))
-    end
-
-    local menu = wapus:CreateMenu(title or defaultUIName, (not cacheExists) or devMode or uiCache.open, cacheExists and uiCache.index or 1)
-    wapus.GetValue = menu.GetValue
-    wapus.sectionIndexes = menu.sectionIndexes
-
-    local function getConfigNames()
-        local names = {}
-
-        for _, name in listfiles(folderName .. "/configs") do
-            table.insert(names, table.pack(string.gsub(string.gsub(string.gsub(name, ".json", ""), folderName .. "/configs/", ""), folderName .. "\\configs\\", ""))[1])
-        end
-
-        return names
-    end
-
-    local function loadConfig(config)
-        for indexes, value in config do
-            local section, name = table.unpack(string.split(indexes, "%%"))
-
-            if type(value) == "table" then
-                value = Color3.new(table.unpack(value))
-            end
-
-            menu:SetValue(section, name, value)
-        end
-    end
-
-    local function saveConfig(name, config)
-        writefile(name, httpService:JSONEncode(config))
-    end
-
-    local function getConfig()
-        local config = {}
-
-        for sectionName, section in menu.sectionIndexes do
-            sectionName = sectionName .. "%%"
-
-            for featureName, uiElement in section.flags do
-                local value = uiElement.value
-
-                if typeof(value) == "Color3" then
-                    value = {value.R, value.G, value.B}
-                end
-
-                config[sectionName .. featureName] = value
-            end
-        end
-
-        return config
-    end
-
-    local function getCallback(name)
-        return function(value)
-            if value ~= nil then
-                local oldConfig = httpService:JSONDecode(readfile(folderName .. "/cache/lastfile.json"))
-                local keybinds = {}
-                oldConfig[name] = value
-
-                for _, keybind in menu.keybinds do
-                    local keyName, data = table.unpack(keybind)
-                    table.insert(keybinds, {data.toggle.section.name .. "%%" .. data.toggle.name, keyName})
-                end
-
-                oldConfig["Keybinds"] = keybinds
-                saveConfig(folderName .. "/cache/lastfile.json", oldConfig)
-            end
-
-            local callback = callbackList[name]
-            if callback then
-                callback(value)
-            end
-        end
-    end
-
-    menu.updateCache = function()
-        saveConfig(folderName .. "/cache/settings.json", {open = menu.open, index = menu.tabIndex})
-    end
-
-    local legit = menu:CreateTab("Legit")
-    local rage = menu:CreateTab("Rage")
-    local visuals = menu:CreateTab("Visuals")
-    local misc = menu:CreateTab("Misc")
-    local settings = menu:CreateTab("Settings")
-
-    local aimbot = legit:CreateSection("Aim Bot", false, "half")
-    local fovsettings = aimbot:AddSection("FOV Settings", false, "half")
-    local silentaim = legit:CreateSection("Silent Aim", true, "half")
-    local backtrack = legit:CreateSection("Backtracking", false, "half")
-    local hitboxes = backtrack:AddSection("Hit Boxes")
-    local gunmods = legit:CreateSection("Gun Mods", true, "half")
-
-    local ragebot = rage:CreateSection("Rage Bot", false, "half")
-    local knifebot = rage:CreateSection("Knife Bot", false, "half");
-    local antiaim = rage:CreateSection("Anti Aim", true, "whole");
-    local fakelag = antiaim
-
-    local enemyesp = visuals:CreateSection("Enemy ESP", false, "whole")
-    --local teamesp = enemyesp:AddSection("Team ESP")
-    local chams = visuals:CreateSection("Chams", true, "half")
-    local morechams = chams:AddSection("More Chams")
-    local worldvisuals = chams:AddSection("World Visuals")
-    local thirdperson = visuals:CreateSection("Third Person", true, "half")
-    local customChar = thirdperson:AddSection("Custom Model")
-    local crosshair = thirdperson:AddSection("Crosshair")
-
-    local movement = misc:CreateSection("Movement", false, "half")
-    local sounds = misc:CreateSection("Sounds", false, "half")
-    local tweaks = misc:CreateSection("Tweaks", true, "third")
-    local antivotekick = tweaks:AddSection("Anti Votekick")
-    local chatspam = misc:CreateSection("Chat Spam", true, "third")
-    local hopper = misc:CreateSection("Server Hopper", true, "third")
-    --local votekick = hopper:AddSection("Votekick")
-
-    aimbot:AddToggle("Enabled", false, getCallback("Aim Bot%%Enabled")):AddKeyBind(nil, "Key Bind")
-    aimbot:AddToggle("Visible Check", false, getCallback("Aim Bot%%Visible Check"))
-    aimbot:AddSlider("Smoothness", 0, 0, 0.99, 0.01, "x", getCallback("Aim Bot%%Smoothness"))
-    aimbot:AddDropdown("Target Part", "Head", {"Head", "Torso"}, getCallback("Aim Bot%%Target Part"))
-    aimbot:AddToggle("Use FOV", false, getCallback("Aim Bot%%Use FOV"))
-    aimbot:AddSlider("FOV Radius", 300, 2, 1000, 1, "px", getCallback("Aim Bot%%FOV Radius"))
-    aimbot:AddToggle("Show FOV Circle", false, getCallback("Aim Bot%%Show FOV Circle")):AddKeyBind(nil, "FOV Key Bind"):AddColorPicker("FOV Circle Color", Color3.new(1, 1, 1), getCallback("Aim Bot%%FOV Circle Color"))
-    aimbot:AddToggle("Use Dead FOV", false, getCallback("Aim Bot%%Use Dead FOV"))
-    aimbot:AddSlider("Dead FOV Radius", 100, 1, 1000, 1, "px", getCallback("Aim Bot%%Dead FOV Radius"))
-    aimbot:AddToggle("Show Dead FOV Circle", false, getCallback("Aim Bot%%Show Dead FOV Circle")):AddKeyBind(nil, "Dead FOV Key Bind"):AddColorPicker("Dead FOV Circle Color", Color3.new(1, 1, 1), getCallback("Aim Bot%%Dead FOV Circle Color"))
-
-    fovsettings:AddToggle("FOV Follows Recoil", false, getCallback("FOV Settings%%FOV Follows Recoil"))
-    fovsettings:AddToggle("Dynamic FOV", false, getCallback("FOV Settings%%Dynamic FOV"))
-    --fovsettings:AddSlider("Circle Side Number", 48, 3, 64, 1, "", getCallback("FOV Settings%%Circle Side Number"))
-    fovsettings:AddSlider("Circle Opacity", 100, 1, 100, 1, "%", getCallback("FOV Settings%%Circle Opacity"))
-    fovsettings:AddToggle("Fill Circles", false, getCallback("FOV Settings%%Fill Circles"))
-
-    silentaim:AddToggle("Enabled", false, getCallback("Silent Aim%%Enabled")):AddKeyBind(nil, "Key Bind")
-    silentaim:AddToggle("Visible Check", false, getCallback("Silent Aim%%Visible Check"))
-    --silentaim:AddToggle("Undetected", true, getCallback("Silent Aim%%Undetected"))
-    silentaim:AddSlider("Hit Chance", 100, 1, 100, 1, "%", getCallback("Silent Aim%%Hit Chance"))
-    silentaim:AddSlider("Head Shot Chance", 100, 0, 100, 1, "%", getCallback("Silent Aim%%Head Shot Chance"))
-    silentaim:AddToggle("Use FOV", false, getCallback("Silent Aim%%Use FOV"))
-    silentaim:AddSlider("FOV Radius", 300, 2, 1000, 1, "px", getCallback("Silent Aim%%FOV Radius"))
-    silentaim:AddToggle("Show FOV Circle", false, getCallback("Silent Aim%%Show FOV Circle")):AddKeyBind(nil, "FOV Key Bind"):AddColorPicker("FOV Circle Color", Color3.new(1, 1, 1), getCallback("Silent Aim%%FOV Circle Color"))
-    silentaim:AddToggle("Use Dead FOV", false, getCallback("Silent Aim%%Use Dead FOV"))
-    silentaim:AddSlider("Dead FOV Radius", 100, 1, 1000, 1, "px", getCallback("Silent Aim%%Dead FOV Radius"))
-    silentaim:AddToggle("Show Dead FOV Circle", false, getCallback("Silent Aim%%Show Dead FOV Circle")):AddKeyBind(nil, "Dead FOV Key Bind"):AddColorPicker("Dead FOV Circle Color", Color3.new(1, 1, 1), getCallback("Silent Aim%%Dead FOV Circle Color"))
-
-    hitboxes:AddToggle("Enabled", false, getCallback("Hit Boxes%%Enabled")):AddKeyBind(nil, "Key Bind"):AddColorPicker("Color", Color3.new(0.1, 0.1, 1), getCallback("Hit Boxes%%Color"))
-    hitboxes:AddDropdown("Hit Part", "Head", {"Head", "Torso"}, getCallback("Hit Boxes%%Hit Part"))
-    hitboxes:AddSlider("Size", 20, 1, 20, 1, " Studs", getCallback("Hit Boxes%%Size"))
-    hitboxes:AddSlider("Transparency", 50, 0, 100, 1, "%", getCallback("Hit Boxes%%Transparency"))
-    hitboxes:AddDropdown("Material", "SmoothPlastic", {"ForceField", "SmoothPlastic", "Glass"}, getCallback("Hit Boxes%%Material"))
-
-    backtrack:AddToggle("Enabled", false, getCallback("Backtracking%%Enabled")):AddKeyBind(nil, "Key Bind"):AddColorPicker("Character Color", Color3.new(0.1, 0.1, 1), getCallback("Backtracking%%Characters Color"))
-    backtrack:AddSlider("Refresh Rate", 2, 1, 10, 1, " Characters/Second", getCallback("Backtracking%%Refresh Rate"))
-    backtrack:AddSlider("Character Duration", 1, 0.1, 1, 0.1, " Seconds", getCallback("Backtracking%%Character Duration"))
-    backtrack:AddSlider("Character Transparency", 50, 0, 100, 1, "%", getCallback("Backtracking%%Character Transparency"))
-    backtrack:AddDropdown("Character Material", "ForceField", {"ForceField", "SmoothPlastic", "Glass"}, getCallback("Backtracking%%Character Material"))
-    backtrack:AddToggle("Clone Character", true, getCallback("Backtracking%%Clone Character"))
-
-    gunmods:AddToggle("No Recoil", false, getCallback("Gun Mods%%No Recoil"))
-    gunmods:AddToggle("No Spread", false, getCallback("Gun Mods%%No Spread"))
-    gunmods:AddToggle("Small Crosshair", false, getCallback("Gun Mods%%Small Crosshair"))
-    gunmods:AddToggle("No Crosshair", false, getCallback("Gun Mods%%No Crosshair"))
-    gunmods:AddToggle("No Sniper Scope", false, getCallback("Gun Mods%%No Sniper Scope"))
-    gunmods:AddToggle("No Camera Sway", false, getCallback("Gun Mods%%No Camera Sway"))
-    gunmods:AddToggle("No Camera Bob", false, getCallback("Gun Mods%%No Camera Bob"))
-    gunmods:AddToggle("No Walk Sway", false, getCallback("Gun Mods%%No Walk Sway"))
-    gunmods:AddToggle("No Gun Sway", false, getCallback("Gun Mods%%No Gun Sway"))
-    gunmods:AddToggle("Instant Reload", false, getCallback("Gun Mods%%Instant Reload"))
-
-    ragebot:AddToggle("Enabled", false, getCallback("Rage Bot%%Enabled")):AddKeyBind(nil, "Key Bind")
-    ragebot:AddToggle("Shoot Effects", false, getCallback("Rage Bot%%Shoot Effects"))
-    ragebot:AddToggle("Fire Position Scanning", false, getCallback("Rage Bot%%Fire Position Scanning"))
-    ragebot:AddSlider("Fire Position Offset", 9, 1, 15.9, 0.1, " Studs", getCallback("Rage Bot%%Fire Position Offset"))
-    ragebot:AddToggle("Hit Position Scanning", false, getCallback("Rage Bot%%Hit Position Scanning"))
-    ragebot:AddSlider("Hit Position Offset", 6, 1, 10, 0.1, " Studs", getCallback("Rage Bot%%Hit Position Offset"))
-    --ragebot:AddToggle("Firerate (May Cause Kicking)", false, getCallback("Rage Bot%%Firerate (May Cause Kicking)"))
-    ragebot:AddToggle("Only Shoot Target Status", false, getCallback("Rage Bot%%Only Shoot Target Status")):AddKeyBind(nil, "Target Key Bind")
-    ragebot:AddToggle("Whitelist Friendly Status", true, getCallback("Rage Bot%%Whitelist Friendly Status")):AddKeyBind(nil, "Friendly Key Bind")
-
-    knifebot:AddToggle("Kill All (May Despawn)", false, getCallback("Knife Bot%%Kill All (May Despawn)")):AddKeyBind(nil, "Key Bind")
-    knifebot:AddToggle("Only When Holding Knife", false, getCallback("Knife Bot%%Only When Holding Knife"))
-    knifebot:AddToggle("Only Kill Target Status", false, getCallback("Knife Bot%%Only Kill Target Status")):AddKeyBind(nil, "Terget Key Bind")
-    knifebot:AddToggle("Whitelist Friendly Status", true, getCallback("Knife Bot%%Whitelist Friendly Status")):AddKeyBind(nil, "Friendly Key Bind")
-
-    antiaim:AddToggle("Enabled (May Cause Despawning)", false, getCallback("Anti Aim%%Enabled (May Cause Despawning)"))-- :AddKeyBind(nil, "Key Bind") broken
-    antiaim:AddToggle("Yaw", false, getCallback("Anti Aim%%Yaw"))
-    antiaim:AddSlider("Yaw Amount", 180, 0, 360, 1, " Degrees", getCallback("Anti Aim%%Yaw Amount"))
-    antiaim:AddDropdown("Yaw Mode", "Relative", {"Relative", "Absolute"}, getCallback("Anti Aim%%Yaw Mode"))
-    antiaim:AddToggle("Pitch", false, getCallback("Anti Aim%%Pitch"))
-    antiaim:AddSlider("Pitch Amount", 0, 0, 180, 1, " Degrees", getCallback("Anti Aim%%Pitch Amount"))
-    antiaim:AddDropdown("Pitch Mode", "Relative", {"Relative", "Absolute"}, getCallback("Anti Aim%%Pitch Mode"))
-    antiaim:AddToggle("Spin Bot", false, getCallback("Anti Aim%%Spin Bot"))
-    antiaim:AddSlider("Spin Speed", 180, 0, 1800, 1, " Degrees/Second", getCallback("Anti Aim%%Spin Speed"))
-    antiaim:AddDropdown("Spin Direction", "Right", {"Left", "Right"}, getCallback("Anti Aim%%Spin Direction"))
-    antiaim:AddToggle("Jitter", false, getCallback("Anti Aim%%Jitter"))
-    antiaim:AddSlider("Jitter Speed", 6, 0, 12, 1, " Shakes/Second", getCallback("Anti Aim%%Jitter Speed"))
-    antiaim:AddToggle("Force Stance", false, getCallback("Anti Aim%%Force Stance"))
-    antiaim:AddDropdown("Set Stance", "Prone", {"Stand", "Crouch", "Prone"}, getCallback("Anti Aim%%Set Stance"));
-
-    fakelag:AddToggle('Fake Lag', false, getCallback('Fake Lag%%Enabled')):AddKeyBind(nil, 'Key Bind');
-    fakelag:AddToggle('Randomize Position', false, getCallback('Fake Lag%%Randomize Position'));
-    fakelag:AddSlider('X-Axis Factor', 0, 0, 8.9, 1, ' Studs', getCallback('Fake Lag%%X-Axis Factor'));
-    fakelag:AddSlider('Z-Axis Factor', 0, 0, 8.9, 1, ' Studs', getCallback('Fake Lag%%Z-Axis Factor'));
-    fakelag:AddSlider('Refresh Distance', 5, 0, 8.9, 0.1, ' Studs', getCallback('Fake Lag%%Refresh Distance'));
-    fakelag:AddSlider('Refresh Rate', 1, 0, 10, 1, ' Seconds', getCallback('Fake Lag%%Refresh Rate'))
-
-    enemyesp:AddToggle("Enabled", true, getCallback("Enemy ESP%%Enabled"))
-    enemyesp:AddToggle("Boxes", false, getCallback("Enemy ESP%%Boxes")):AddColorPicker("Box Color", Color3.fromRGB(0,255,255), getCallback("Enemy ESP%%Box Color"))
-    enemyesp:AddSlider("Box Opacity", 100, 1, 100, 1, "%", getCallback("Enemy ESP%%Box Opacity"))
-    --enemyesp:AddSlider("Box Thickness", 1, 1, 10, 1, " px", getCallback("Enemy ESP%%Box Thickness"))
-    enemyesp:AddToggle("Box Outlines", false, getCallback("Enemy ESP%%Box Outlines")):AddColorPicker("Box Outline Color", Color3.fromRGB(0,0,0), getCallback("Enemy ESP%%Box Outline Color"))
-    enemyesp:AddSlider("Box Outline Opacity", 100, 1, 100, 1, "%", getCallback("Enemy ESP%%Box Outline Opacity"))
-    --enemyesp:AddSlider("Box Outline Thickness", 5, 2, 10, 1, " px", getCallback("Enemy ESP%%Box Outline Thickness"))
-    enemyesp:AddToggle("Fill Boxes", false, getCallback("Enemy ESP%%Fill Boxes")):AddColorPicker("Box Inside Color", Color3.fromRGB(0,255,255), getCallback("Enemy ESP%%Box Inside Color"))
-    enemyesp:AddSlider("Box Inside Opacity", 100, 1, 100, 1, "%", getCallback("Enemy ESP%%Box Inside Opacity"))
-    --enemyesp:AddDropdown("Box Type", "Square", {"Square", "Cube"}, getCallback("Enemy ESP%%Box Type"))
-    enemyesp:AddToggle("Health Bar", false, getCallback("Enemy ESP%%Health Bar")):AddColorPicker("Damage Color", Color3.fromRGB(255,0,0), getCallback("Enemy ESP%%Damage Color")):AddColorPicker("Health Color", Color3.fromRGB(0,255,0), getCallback("Enemy ESP%%Health Color"))
-    enemyesp:AddToggle("Health Bar Outline", false, getCallback("Enemy ESP%%Health Bar Outline")):AddColorPicker("Health Outline Color", Color3.fromRGB(0,0,0), getCallback("Enemy ESP%%Health Outline Color"))
-    enemyesp:AddToggle("Tracers", false, getCallback("Enemy ESP%%Tracers")):AddColorPicker("Tracer Color", Color3.fromRGB(0,255,255), getCallback("Enemy ESP%%Tracer Color"))
-    enemyesp:AddSlider("Tracer Opacity", 100, 1, 100, 1, "%", getCallback("Enemy ESP%%Tracer Opacity"))
-    --enemyesp:AddSlider("Tracers Thickness", 2, 1, 10, 1, " px", getCallback("Enemy ESP%%Tracers Thickness"))
-    enemyesp:AddToggle("Tracer Outlines", false, getCallback("Enemy ESP%%Tracer Outlines")):AddColorPicker("Tracer Outline Color", Color3.fromRGB(0,0,0), getCallback("Enemy ESP%%Tracer Outline Color"))
-    --enemyesp:AddSlider("Tracer Outlines Thickness", 4, 2, 10, 1, " px", getCallback("Enemy ESP%%Tracer Outlines Thickness"))
-    enemyesp:AddSlider("Tracer Outlines Opacity", 100, 1, 100, 1, "%", getCallback("Enemy ESP%%Tracer Outlines Opacity"))
-    enemyesp:AddDropdown("Tracer Origin", "Bottom", {"Middle", "Top", "Bottom"}, getCallback("Enemy ESP%%Tracer Origin"))
-    --enemyesp:AddDropdown("Tracer Destination", "Bottom", {"Top", "Bottom"}, getCallback("Enemy ESP%%Tracer Destination"))
-    enemyesp:AddToggle("Names", false, getCallback("Enemy ESP%%Names")):AddColorPicker("Names Color", Color3.fromRGB(255,255,255), getCallback("Enemy ESP%%Names Color"))
-    enemyesp:AddToggle("Weapons", false, getCallback("Enemy ESP%%Weapons")):AddColorPicker("Weapons Color", Color3.fromRGB(255,255,255), getCallback("Enemy ESP%%Weapons Color"))
-    enemyesp:AddToggle("Distances", false, getCallback("Enemy ESP%%Distances")):AddColorPicker("Distances Color", Color3.fromRGB(255,255,255), getCallback("Enemy ESP%%Distances Color"))
-    enemyesp:AddToggle("Health Percents", false, getCallback("Enemy ESP%%Health Percents")):AddColorPicker("Health Number Color", Color3.fromRGB(255,255,255), getCallback("Enemy ESP%%Health Number Color"))
-    --enemyesp:AddSlider("Text Size", 20, 5, 40, 1, " px", getCallback("Enemy ESP%%Text Size"))
-    enemyesp:AddToggle("Text Outlines", true, getCallback("Enemy ESP%%Text Outlines")):AddColorPicker("Text Outline Color", Color3.fromRGB(0,0,0), getCallback("Enemy ESP%%Text Outline Color"))
-    enemyesp:AddToggle("Highlight Chams", false, getCallback("Enemy ESP%%Highlight Chams")):AddColorPicker("Highlight Outline Color", Color3.fromRGB(0,0,0), getCallback("Enemy ESP%%Highlight Outline Color")):AddColorPicker("Highlight Fill Color", Color3.fromRGB(0,0,255), getCallback("Enemy ESP%%Highlight Fill Color"))
-    enemyesp:AddSlider("Highlight Fill Transparency", 50, 0, 100, 1, "%", getCallback("Enemy ESP%%Highlight Fill Opacity"))
-    enemyesp:AddSlider("Highlight Outline Transparency", 0, 0, 100, 1, "%", getCallback("Enemy ESP%%Highlight Outline Opacity"))
-    enemyesp:AddToggle("Highlight Visible Check", false, getCallback("Enemy ESP%%Highlight Visible Check"))
-
-    --[[teamesp:AddToggle("Enabled", true, getCallback("Team ESP%%Enabled")):AddKeyBind(nil, "Key Bind")
-    teamesp:AddToggle("Boxes", false, getCallback("Team ESP%%Boxes")):AddColorPicker("Box Color", Color3.fromRGB(0,255,255), getCallback("Team ESP%%Box Color"))
-    teamesp:AddSlider("Box Opacity", 100, 1, 100, 1, "%", getCallback("Team ESP%%Box Opacity"))
-    --enemyesp:AddSlider("Box Thickness", 1, 1, 10, 1, " px", getCallback("Team ESP%%Box Thickness"))
-    teamesp:AddToggle("Box Outlines", false, getCallback("Team ESP%%Box Outlines")):AddColorPicker("Box Outline Color", Color3.fromRGB(0,0,0), getCallback("Team ESP%%Box Outline Color"))
-    teamesp:AddSlider("Box Outline Opacity", 100, 1, 100, 1, "%", getCallback("Team ESP%%Box Outline Opacity"))
-    --enemyesp:AddSlider("Box Outline Thickness", 5, 2, 10, 1, " px", getCallback("Team ESP%%Box Outline Thickness"))
-    teamesp:AddToggle("Fill Boxes", false, getCallback("Team ESP%%Fill Boxes")):AddColorPicker("Box Inside Color", Color3.fromRGB(0,255,255), getCallback("Team ESP%%Box Color"))
-    teamesp:AddSlider("Box Inside Opacity", 100, 1, 100, 1, "%", getCallback("Team ESP%%Box Inside Opacity"))
-    --enemyesp:AddDropdown("Box Type", "Square", {"Square", "Cube"}, getCallback("Team ESP%%Box Type"))
-    teamesp:AddToggle("Health Bar", false, getCallback("Team ESP%%Health Bar")):AddColorPicker("Damage Color", Color3.fromRGB(255,0,0), getCallback("Team ESP%%Damage Color")):AddColorPicker("Health Color", Color3.fromRGB(0,255,0), getCallback("Team ESP%%Health Color"))
-    teamesp:AddToggle("Health Bar Outline", false, getCallback("Team ESP%%Health Bar Outline")):AddColorPicker("Health Outline Color", Color3.fromRGB(0,0,0), getCallback("Team ESP%%Health Outline Color"))
-    teamesp:AddToggle("Tracers", false, getCallback("Team ESP%%Tracers")):AddColorPicker("Tracer Color", Color3.fromRGB(0,255,255), getCallback("Team ESP%%Tracer Color"))
-    teamesp:AddSlider("Tracer Opacity", 100, 1, 100, 1, "%", getCallback("Team ESP%%Tracer Opacity"))
-    --enemyesp:AddSlider("Tracers Thickness", 2, 1, 10, 1, " px", getCallback("Team ESP%%Tracers Thickness"))
-    teamesp:AddToggle("Tracer Outlines", false, getCallback("Team ESP%%Tracer Outlines")):AddColorPicker("Tracer Outline Color", Color3.fromRGB(0,0,0), getCallback("Team ESP%%Tracer Outline Color"))
-    --enemyesp:AddSlider("Tracer Outlines Thickness", 4, 2, 10, 1, " px", getCallback("Team ESP%%Tracer Outlines Thickness"))
-    teamesp:AddSlider("Tracer Outlines Opacity", 100, 1, 100, 1, "%", getCallback("Team ESP%%Tracer Outlines Opacity"))
-    teamesp:AddDropdown("Tracer Origin", "Bottom", {"Middle", "Top", "Bottom"}, getCallback("Team ESP%%Tracer Origin"))
-    --enemyesp:AddDropdown("Tracer Destination", "Bottom", {"Top", "Bottom"}, getCallback("Team ESP%%Tracer Destination"))
-    teamesp:AddToggle("Names", false, getCallback("Team ESP%%Names")):AddColorPicker("Names Color", Color3.fromRGB(255,255,255), getCallback("Team ESP%%Names Color"))
-    teamesp:AddToggle("Weapons", false, getCallback("Team ESP%%Weapons")):AddColorPicker("Weapons Color", Color3.fromRGB(255,255,255), getCallback("Team ESP%%Weapons Color"))
-    teamesp:AddToggle("Distances", false, getCallback("Team ESP%%Distances")):AddColorPicker("Distances Color", Color3.fromRGB(255,255,255), getCallback("Team ESP%%Distances Color"))
-    teamesp:AddToggle("Health Percents", false, getCallback("Team ESP%%Health Percents")):AddColorPicker("Health Number Color", Color3.fromRGB(255,255,255), getCallback("Team ESP%%Health Number Color"))
-    --enemyesp:AddSlider("Text Size", 20, 5, 40, 1, " px", getCallback("Team ESP%%Text Size"))
-    teamesp:AddToggle("Text Outlines", true, getCallback("Team ESP%%Text Outlines")):AddColorPicker("Text Outline Color", Color3.fromRGB(0,0,0), getCallback("Team ESP%%Text Outline Color"))
-    teamesp:AddToggle("Highlight Chams", false, getCallback("Team ESP%%Highlight Chams")):AddColorPicker("Highlight Outline Color", Color3.fromRGB(0,0,0), getCallback("Team ESP%%Highlight Outline Color")):AddColorPicker("Highlight Fill Color", Color3.fromRGB(0,0,255), getCallback("Team ESP%%Highlight Fill Color"))
-    teamesp:AddToggle("Highlight Visible Check", false, getCallback("Team ESP%%Highlight Visible Check"))
-    teamesp:AddSlider("Highlight Fill Transparency", 50, 0, 100, 1, "%", getCallback("Team ESP%%Highlight Fill Transparency"))
-    teamesp:AddSlider("Highlight Outline Transparency", 0, 0, 100, 1, "%", getCallback("Team ESP%%Highlight Outline Transparency"))]]
-
-    chams:AddToggle("Arm Chams", false, getCallback("Chams%%Arm Chams")):AddColorPicker("Arm Color", Color3.new(0.1, 0.1, 1), getCallback("Chams%%Arm Color"))
-    chams:AddSlider("Arm Transparency", 50, 0, 100, 1, "%", getCallback("Chams%%Arm Transparency"))
-    chams:AddDropdown("Arm Material", "ForceField", {"ForceField", "SmoothPlastic", "Glass"}, getCallback("Chams%%Arm Material"))
-    chams:AddToggle("Gun Chams", false, getCallback("Chams%%Gun Chams")):AddColorPicker("Gun Color", Color3.new(0.1, 0.1, 1), getCallback("Chams%%Gun Color"))
-    chams:AddSlider("Gun Transparency", 50, 0, 100, 1, "%", getCallback("Chams%%Gun Transparency"))
-    chams:AddDropdown("Gun Material", "ForceField", {"ForceField", "SmoothPlastic", "Glass"}, getCallback("Chams%%Gun Material"))
-
-    morechams:AddToggle("Third Person Character Chams", false, getCallback("More Chams%%Third Person Character Chams")):AddColorPicker("Character Color", Color3.new(0.1, 0.1, 1), getCallback("More Chams%%Character Color"))
-    morechams:AddSlider("Character Transparency", 50, 0, 100, 1, "%", getCallback("More Chams%%Character Transparency"))
-    morechams:AddDropdown("Character Material", "ForceField", {"ForceField", "SmoothPlastic", "Glass"}, getCallback("More Chams%%Character Material"))
-
-    worldvisuals:AddToggle("Ambient", false, getCallback("World Visuals%%Ambient")):AddKeyBind(nil, "Ambient Key Bind"):AddColorPicker("Ambient Color", Color3.new(0.1, 0.1, 1), getCallback("World Visuals%%Ambient Color"))
-    worldvisuals:AddToggle("Bullet Tracers", false, getCallback("World Visuals%%Bullet Tracers")):AddKeyBind(nil, "Tracers Key Bind"):AddColorPicker("Color One", Color3.new(0.1, 0.1, 1), getCallback("World Visuals%%Color One")):AddColorPicker("Color Two", Color3.new(1, 0.9, 0.9), getCallback("World Visuals%%Color Two"))
-    worldvisuals:AddSlider("Tracers Size", 0.1, 0.05, 3, 0.05, " Studs", getCallback("World Visuals%%Tracers Size"))
-    worldvisuals:AddSlider("Tracers Transparency", 50, 0, 100, 1, "%", getCallback("World Visuals%%Tracers Transparency"))
-    worldvisuals:AddDropdown("Tracers Material", "ForceField", {"ForceField", "SmoothPlastic", "Glass"}, getCallback("World Visuals%%Tracers Material"))
-    worldvisuals:AddToggle("Impact Points", false, getCallback("World Visuals%%Impact Points")):AddKeyBind(nil, "Points Key Bind"):AddColorPicker("Points Color", Color3.new(0.1, 0.1, 1), getCallback("World Visuals%%Points Color"))
-    worldvisuals:AddSlider("Points Transparency", 50, 0, 100, 1, "%", getCallback("World Visuals%%Points Transparency"))
-    worldvisuals:AddDropdown("Points Material", "ForceField", {"ForceField", "SmoothPlastic", "Glass"}, getCallback("World Visuals%%Points Material"))
-    worldvisuals:AddSlider("Duration", 4, 1, 5, 0.5, " Seconds", getCallback("World Visuals%%Duration"))
-
-    thirdperson:AddToggle("Enabled", false, getCallback("Third Person%%Enabled")):AddKeyBind(nil, "Key Bind")
-    thirdperson:AddToggle("Show Character", false, getCallback("Third Person%%Show Character"))
-    thirdperson:AddToggle("Show Character While Aiming", false, getCallback("Third Person%%Show Character While Aiming"))
-    thirdperson:AddSlider("Camera Offset X", 0, -20, 20, 1, " Studs", getCallback("Third Person%%Camera Offset X"))
-    thirdperson:AddSlider("Camera Offset Y", 0, -20, 20, 1, " Studs", getCallback("Third Person%%Camera Offset Y"))
-    thirdperson:AddSlider("Camera Offset Z", 7, -20, 20, 1, " Studs", getCallback("Third Person%%Camera Offset Z"))
-    thirdperson:AddToggle("Camera Offset Always Visible", true, getCallback("Third Person%%Camera Offset Always Visible"))
-    thirdperson:AddToggle("Apply Anti Aim To Character", true, getCallback("Third Person%%Apply Anti Aim To Character"))
-
-    customChar:AddToggle("Custom Character Model", false, getCallback("Custom Model%%Custom Character Model")):AddKeyBind(nil, "Key Bind")
-    customChar:AddTextBox("Asset ID", "ID", getCallback("Custom Model%%Asset ID"))
-    customChar:AddSlider("Asset Offset X", 0, -10, 10, 0.2, " Studs", getCallback("Custom Model%%Asset Offset X"))
-    customChar:AddSlider("Asset Offset Y", 0, -10, 10, 0.2, " Studs", getCallback("Custom Model%%Asset Offset Y"))
-    customChar:AddSlider("Asset Offset Z", 0, -10, 10, 0.2, " Studs", getCallback("Custom Model%%Asset Offset Z"))
-
-    crosshair:AddToggle("Enabled", false, getCallback("Crosshair%%Enabled")):AddKeyBind(nil, "Key Bind"):AddColorPicker("Crosshair Color", Color3.new(0.1, 0.1, 1), getCallback("Crosshair%%Crosshair Color"))
-    crosshair:AddToggle("Show Dot", false, getCallback("Crosshair%%Show Dot"))
-    crosshair:AddToggle("Follow Recoil", false, getCallback("Crosshair%%Follow Recoil"))
-    crosshair:AddSlider("X Size", 10, 1, 50, 1, " px", getCallback("Crosshair%%X Size"))
-    crosshair:AddSlider("Y Size", 10, 1, 50, 1, " px", getCallback("Crosshair%%Y Size"))
-    crosshair:AddSlider("X Space", 10, 1, 50, 1, " px", getCallback("Crosshair%%X Space"))
-    crosshair:AddSlider("Y Space", 10, 1, 50, 1, " px", getCallback("Crosshair%%Y Space"))
-    crosshair:AddSlider("Spin Speed", 0, 0, 3, 0.05, " Spins/Second", getCallback("Crosshair%%Spin Speed"))
-    crosshair:AddToggle("Rainbow Crosshair", false, getCallback("Crosshair%%Rainbow Crosshair"))
-    crosshair:AddSlider("Rainbow Speed", 0.5, 0, 3, 0.05, " Rainbows/Second", getCallback("Crosshair%%Rainbow Speed"))
-
-    movement:AddToggle("Walk Speed", false, getCallback("Movement%%Walk Speed")):AddKeyBind(nil, "Walk Bind")
-    movement:AddSlider("Set Speed", 50, 10, 250, 1, " Studs/Second", getCallback("Movement%%Set Speed"))
-    movement:AddToggle("Jump Power", false, getCallback("Movement%%Jump Power")):AddKeyBind(nil, "Jump Bind")
-    movement:AddSlider("Height Addition", 10, 1, 15, 1, " Studs", getCallback("Movement%%Height Addition"))
-    movement:AddToggle("No Fall Damage", false, getCallback("Movement%%No Fall Damage"))
-    movement:AddToggle("Bunny Hop", false, getCallback("Movement%%Bunny Hop")):AddKeyBind(nil, "BHop Bind")
-    movement:AddToggle("Only While Jumping", true, getCallback("Movement%%Only While Jumping"))
-    --movement:AddToggle("Fly", false, getCallback("Movement%%Fly")):AddKeyBind(nil, "Fly Bind")
-    --movement:AddSlider("Fly Speed", 50, 10, 250, 1, " Studs/Second", getCallback("Movement%%Fly Speed"))
-    --movement:AddToggle("Noclip", false, getCallback("Movement%%Noclip")):AddKeyBind(nil, "Noclip Bind")
-
-    sounds:AddDropdown("Shoot Sound", "None", soundFileList, getCallback("Sounds%%Shoot Sound"))
-    sounds:AddDropdown("Hit Sound", "None", soundFileList, getCallback("Sounds%%Hit Sound"))
-    sounds:AddDropdown("Kill Sound", "None", soundFileList, getCallback("Sounds%%Kill Sound"))
-    sounds:AddDropdown("Got Hit Sound", "None", soundFileList, getCallback("Sounds%%Got Hit Sound"))
-    sounds:AddDropdown("Glass Breaking Sound", "None", soundFileList, getCallback("Sounds%%Glass Breaking Sound"))
-    sounds:AddDropdown("Footstep Sound", "None", soundFileList, getCallback("Sounds%%Footstep Sound"))
-
-    tweaks:AddToggle("Custom Kill Notification", false, getCallback("Tweaks%%Custom Kill Notification"))
-    tweaks:AddTextBox("Notification Text", "Furry Killed!", getCallback("Tweaks%%Notification Text"))
-    tweaks:AddButton("Unlock All Attachments", getCallback("Tweaks%%Unlock All Attachments"))
-    tweaks:AddButton("Unlock All Knives", getCallback("Tweaks%%Unlock All Knives"))
-    tweaks:AddButton("Unlock All Camos", getCallback("Tweaks%%Unlock All Camos"))
-    tweaks:AddButton("Unlock All", getCallback("Tweaks%%Unlock All"))
-
-    antivotekick:AddButton("Initiate Multi-Instance Anti Votekick", function()
-        writefile(folderName .. "/cache/votekick data/" .. fileName, userName)
-    end)
-
-    antivotekick:AddButton("Copy YouTube Tutorial Link", function()
-        setclipboard("https://youtu.be/dvyiz8iVe5g")
-    end)
-
-    chatspam:AddToggle("Enabled", false, getCallback("Chat Spam%%Enabled")):AddKeyBind(nil, "Key Bind")
-    chatspam:AddDropdown("Spam List", "default.txt", chatListsFiles, getCallback("Chat Spam%%Spam List"))
-    chatspam:AddSlider("Spam Delay", 2.51, 2.51, 5, 0.01, " Seconds", getCallback("Chat Spam%%Spam Delay"))
-    --chatspam:AddToggle("Team Chat", false, getCallback("Chat Spam%%Team Chat"))
-
-    --hopper:AddToggle("Server Hop On Votekick", false, getCallback("Server Hopper%%Server Hop On Votekick"))
-    hopper:AddButton("Server Hop", getCallback("Server Hopper%%Server Hop"))
-    hopper:AddButton("Rejoin", getCallback("Server Hopper%%Rejoin"))
-    hopper:AddButton("Copy Join Script", getCallback("Server Hopper%%Copy Join Script"))
-    hopper:AddButton("Clear Cached Servers", getCallback("Server Hopper%%Clear Cached Servers"))
-
-    settings:CreatePlayerList({"Friendly", "Target"}, {
-        status = function(player, status)
-            playerStatus[player] = status
-        end,
-        votekick = function(player)
-        end,
-        spectate = function(player)
-        end
-    })
-
-    local cheatSettings = settings:CreateSection("Cheat Settings", false, "third")
-    local configuration = settings:CreateSection("Configuration", true, "third")
-
-    cheatSettings:AddToggle("Save Last Config", true, getCallback("Cheat Settings%%Save Last Config"))
-    cheatSettings:AddToggle("Show Keybind List", false, getCallback("Cheat Settings%%Show Keybind List"))
-    cheatSettings:AddToggle("Show Key Name", false, getCallback("Cheat Settings%%Show Key Name"))
-    cheatSettings:AddButton("Copy Discord Invite", function()
-        setclipboard("https://discord.gg/tUEJZYvF9d") -- pro
-    end)
-    cheatSettings:AddButton("Unload", function()
-        unloadMain()
-        stillGoing = false
-
-        for _, drawingFolder in game:GetService("CoreGui"):GetChildren() do
-            if drawingFolder.Name == "Drawing API By iRay" then
-                drawingFolder:Destroy()
-            end
-        end
-
-        for _, connection in connectionList do
-            pcall(function()
-                connection:Disconnect()
-            end)
-        end
-    end)
-
-    local configList = configuration:AddDropdown("Config List", "Config", getConfigNames(), getCallback("Configuration%%Config List"))
-    configuration:AddButton("Load Config", getCallback("Configuration%%Load Config"))
-    configuration:AddButton("Update Config List", getCallback("Configuration%%Update Config List"))
-    configuration:AddTextBox("Config Name", "New Config", getCallback("Configuration%%Config Name"))
-    configuration:AddButton("Save Config", getCallback("Configuration%%Save Config"))
-
-    callbackList["Cheat Settings%%Show Keybind List"] = function(bool)
-        if bool then
-            task.delay(0.05, function()
-                menu:CreateKeyList(menu:GetValue("Cheat Settings", "Show Key Name"))
-            end)
-        elseif menu.DestroyKeyList then
-            menu:DestroyKeyList()
-        end
-    end
-
-    callbackList["Cheat Settings%%Show Key Name"] = function(bool)
-        if menu:GetValue("Cheat Settings", "Show Keybind List") then
-            callbackList["Cheat Settings%%Show Keybind List"](false)
-            callbackList["Cheat Settings%%Show Keybind List"](true)
-        end
-    end
-
-    callbackList["Configuration%%Load Config"] = function()
-        local fileName = menu:GetValue("Configuration", "Config List")
-
-        if fileName and isfile(folderName .. "/configs/" .. fileName .. ".json") then
-            loadConfig(httpService:JSONDecode(readfile(folderName .. "/configs/" .. fileName .. ".json")))
-            menu:SetValue("Configuration", "Config Name", fileName)
-        end
-    end
-
-    callbackList["Configuration%%Update Config List"] = function()
-        configList.options = getConfigNames()
-    end
-
-    callbackList["Configuration%%Save Config"] = function()
-        saveConfig(folderName .. "/configs/" .. menu:GetValue("Configuration", "Config Name") .. ".json", getConfig())
-    end
-
-    if configExists then
-        local config = httpService:JSONDecode(readfile(folderName .. "/cache/lastfile.json"))
-
-        if config["Cheat Settings%%Save Last Config"] ~= false then
-            loadConfig(config)
-        end
-
-        local keybinds = config["Keybinds"]
-
-        if keybinds then
-            for _, data in keybinds do
-                local name, key = table.unpack(data)
-                local section, element = table.unpack(string.split(name, "%%"))
-                menu.sectionIndexes[section].flags[element].keybind:SetValue(key)
-            end
-        end
-    end
+--// Menu Key
+Library.ToggleKeybind = Options.MenuKeybind or "RightShift"
 end)()
