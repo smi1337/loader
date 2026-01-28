@@ -1,30 +1,4 @@
---[[
-
-    ~ New Discord Server ~
-
-    [ https://discord.gg/tUEJZYvF9d ]
-
-    ~ Index ~
-
-    [ Drawing Library ] - [ Line 111 ]
-    [ UI Library ] - [ Line 1117 ]
-    [ Cham Library ] - [ Line 2710 ]
-    [ Main Cheat ] - [ Line 2766 ]
-    [ Make UI ] - [ Line 5778 ]
-
-    ~ Credits ~
-
-    [ iRay ] - [ @896378803868295178 ] | Lead developer
-    [ ipufo ] - [ @819756897543389184 ] | Took over development since 5/19/2025
-    [ Mickey ] - [ @953720095811719208 ] | Developed perfect trajectory function and ESP library
-    [ Redpoint ] - [ @418013390024474624 ] | Contributed to triangles in the custom drawing api
-
-    ~ Special Thanks ~
-
-    [ BBot ] - [ Inspiration to make such a nice UI and high quality/quantity feature list ]
-    [ Legacy ] - [ Best and only beta tester ]
-
-]]
+-- 23:12
 
 function LPH_NO_VIRTUALIZE(fuction) -- unnecessary now
     return fuction
@@ -6054,7 +6028,7 @@ MainRight:AddSlider("DepSlider", {
     Min = 0,
     Max = 50,
     Rounding = 0
-}):AddDependency({ DepToggle })
+})
 
 --// Theme & Save
 local ThemeManager = loadstring(game:HttpGet(
